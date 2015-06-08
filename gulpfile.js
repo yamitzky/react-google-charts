@@ -28,15 +28,6 @@ function handleError(task) {
   };
 }
 
-gulp.task('examples', function() {
-  return browserify({entries:['./examples/src/example.js'], debug:true})
-               .transform(reactify)
-               .transform(stringify(['.html']))
-                .bundle()
-                .pipe(source('examples.min.js'))
-                .pipe(gulp.dest('./examples/dist/'))
-                .pipe(notify("Examples compiled"));
-});
 
 gulp.task('dist', function() {
        return browserify({entries:['./src/index.js'], debug:true})
@@ -54,7 +45,7 @@ gulp.task('scripts', function() {
      return browserify({entries:['./src/index.js'], debug:true})
                .transform(reactify)
                 .bundle()
-                .pipe(source('react-google-charts.min.js'))
+                .pipe(source('app.min.js'))
                 .pipe(gulp.dest('./dist/'))
                 .pipe(notify("JS compiled"));
 
@@ -64,7 +55,7 @@ gulp.task('scripts', function() {
 
 
 gulp.task('webserver', function() {
-  gulp.src('./examples')
+  gulp.src('./')
     .pipe(webserver({
       livereload: true,
       directoryListing: false,
@@ -81,13 +72,6 @@ gulp.task('default', ['scripts','watch-scripts'], function(){
     gulp.start('webserver');
 }).on('error',handleError)
 
-gulp.task('ex', ['examples', 'watch-examples'], function(){
-  gulp.start('webserver');
-});
-
-gulp.task('watch-examples',['scripts', 'examples'], function() {
-    gulp.watch([ './examples/src/*.js' ], ['examples']).on('error', handleError);
-});
 
 gulp.task('build', ['scripts']);
 

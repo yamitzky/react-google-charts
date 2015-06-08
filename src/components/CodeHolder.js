@@ -16,28 +16,39 @@ var CodeHolder = React.createClass({
 			code: ''
 		};
 	},
+
+	componentDidUpdate: function(prevProps, prevState) {
+		this.loadCode();
+	},
+
 	componentDidMount: function(prevProps, prevState) {
 		if (this.props.codeUrl !== '') {
-			console.log(this.props.codeUrl);
-			var self = this;
-			var options = {
-		    	url: this.props.codeUrl,
-		    	dataType: 'text',
-		    	//To be able to call *this* and access the CodeHolder object
-		    	context: this
-		  	};
-		  	$.ajax(options).done(
-		  		function(data){
-		    		this.setState({code:data})		
-		    }).fail(function(err){
-		    		console.log("Error loading script : ",err);
-		    });
-
+			this.loadCode();
 		}
 	},
+
+	loadCode: function(codeUrl) {
+		console.log(this.props.codeUrl);
+		var self = this;
+
+		var options = {
+	    	url: this.props.codeUrl,
+	    	dataType: 'text',
+	    	//To be able to call *this* and access the CodeHolder object
+	    	context: this
+	  	};
+	  	$.ajax(options).done(
+	  		function(data){
+	  			console.log("Received data");
+	    		this.setState({code:data})		
+	    }).fail(function(err){
+	    		console.log("Error loading script : ",err);
+	    });
+	},
+
 	render: function() {
+
 		var code = (this.props.code === '')?this.state.code:this.props.code;
-		console.log(this.state.code);
 		return (
 			<div className="CodeHolder">
 				<pre>
